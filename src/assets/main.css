@@ -1,5 +1,8 @@
 @import './base.css';
-@import "tailwindcss";
+@import 'tailwindcss';
+body {
+  @apply bg-gray-100 text-gray-900;
+}
 
 @media screen and (max-width: 640px) {
   nav {
