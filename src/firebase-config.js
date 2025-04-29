@@ -1,9 +1,7 @@
-// src/firebase-config.js
-
 import { initializeApp } from 'firebase/app'
 import { getAnalytics } from 'firebase/analytics'
+import { getAuth, GoogleAuthProvider } from 'firebase/auth' // 👈 add these
 
-// Your Firebase configuration
 const firebaseConfig = {
   apiKey: 'AIzaSyDHY5EVEj8RMUvPtu_wzbvBRoe9p5aS10o',
   authDomain: 'task-manager-app-55ab2.firebaseapp.com',
@@ -14,8 +12,11 @@ const firebaseConfig = {
   measurementId: 'G-GYVX3FLKD4',
 }
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig)
 const analytics = getAnalytics(app)
 
-export { app, analytics }
+// Auth related
+const auth = getAuth(app)
+const provider = new GoogleAuthProvider()
+
+export { app, analytics, auth, provider }
