@@ -3,42 +3,51 @@ import { ref } from 'vue'
 import { auth } from '@/firebase-config' // adjust path
 import { onAuthStateChanged, signInWithPopup, signOut, GoogleAuthProvider } from 'firebase/auth'
 
-export const useAuthStore = defineStore('auth', () => {
-  // State
-  const user = ref(null)
-
-  // Actions
-  const fetchUser = () => {
-    onAuthStateChanged(auth, (currentUser) => {
-      user.value = currentUser
-    })
-  }
-
-  const signInWithGoogle = async () => {
-    const provider = new GoogleAuthProvider()
-    try {
-      const result = await signInWithPopup(auth, provider)
-      user.value = result.user
-    } catch (error) {
-      console.error('Google Sign-In Error:', error)
-      throw error
-    }
-  }
-
-  const signOutUser = async () => {
-    try {
-      await signOut(auth)
-      user.value = null
-    } catch (error) {
-      console.error('Sign-Out Error:', error)
-      throw error
-    }
-  }
-
-  return {
-    user,
-    fetchUser,
-    signInWithGoogle,
-    signOutUser,
-  }
+export const useAuthStore = defineStore('auth', {
+  state: () => ({
+    user: null,
+  }),
+  getters: {
+    isAuthenticated: (state) => !!state.user,
+    getUser: (state) => state.user,
+  },
+  actions: {
+    fetchUser() {
+      return new Promise((resolve, reject) => {
+        const unsubscribe = onAuthStateChanged(
+          auth,
+          (currentUser) => {
+            this.user = currentUser
+            unsubscribe() // Unsubscribe after the user is fetched
+            resolve(this.user) // Resolve the Promise with the user
+          },
+          (error) => {
+            reject(error) // Reject the Promise if there is an error
+          },
+        )
+      })
+    },
+    signInWithGoogle() {
+      const provider = new GoogleAuthProvider()
+      return signInWithPopup(auth, provider)
+        .then((result) => {
+          this.user = result.user
+          console.log('User signed in:', this.user)
+        })
+        .catch((error) => {
+          console.error('Google Sign-In Error:', error)
+          throw error
+        })
+    },
+    signOutUser() {
+      return signOut(auth)
+        .then(() => {
+          this.user = null
+        })
+        .catch((error) => {
+          console.error('Sign-Out Error:', error)
+          throw error
+        })
+    },
+  },
 })

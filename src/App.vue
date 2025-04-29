@@ -1,10 +1,21 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 import { useAuthStore } from '@/stores/auth';
+import { watchEffect, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const authStore = useAuthStore();
-authStore.fetchUser();
+
+onMounted(() => {
+  authStore.fetchUser();
+});
+
+watchEffect(() => {
+  if (!authStore.user) {
+    router.push('/login');
+  }
+});
 
 </script>
 
@@ -14,6 +25,7 @@ authStore.fetchUser();
       <nav class="flex gap-4 py-4 w-full">
         <RouterLink to="/">Dashboard</RouterLink>
         <RouterLink to="/my-tasks">My Tasks</RouterLink>
+        <span @click="authStore.signOutUser()" class="mt-4 text-blue-500 cursor-pointer">Logout</span>
       </nav>
     </div>
   </header>
