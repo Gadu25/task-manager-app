@@ -1,12 +1,20 @@
 <script setup>
+import { ref } from 'vue'
 import HoverButton from '@/components/buttons/HoverButton.vue'
 import RegularTaskCard from '@/components/cards/RegularTaskCard.vue'
 import { Icon } from '@iconify/vue'
+import AddTask from '@/components/forms/AddTask.vue'
+
+const isAddingTask = ref(false);
+const toggleAddTask = () => {
+  isAddingTask.value = !isAddingTask.value
+}
+
 </script>
 <template>
   <div class="tasks">
     <div class="flex justify-end">
-      <HoverButton title="Add">
+      <HoverButton title="Add" @click="toggleAddTask">
         <Icon icon="mynaui:plus-solid" width="26" height="26" />
       </HoverButton>
     </div>
@@ -19,6 +27,7 @@ import { Icon } from '@iconify/vue'
       <RegularTaskCard />
       <RegularTaskCard />
     </div>
+    <AddTask :isAddingTask="isAddingTask" @close="toggleAddTask" />
   </div>
 </template>
 
