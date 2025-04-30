@@ -25,7 +25,7 @@ watchEffect(() => {
   <header v-if="authStore.user">
     <div class="p-4 xl:px-0 xl:w-[1200px] m-auto">
       <nav class="flex justify-between items-center gap-4 py-4 w-full">
-        <div class="flex justify-start items-center gap-4">
+        <div class="flex justify-start items-center gap-4 text-xl">
           <RouterLink to="/">Dashboard</RouterLink>
           <RouterLink to="/my-tasks">My Tasks</RouterLink>
         </div>
