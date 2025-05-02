@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { storeToRefs } from 'pinia'
+
+// views
 import Dashboard from '../views/Dashboard.vue'
 import MyTasks from '../views/MyTasks.vue'
 import Auth from '@/views/Auth.vue'
+import Task from '@/views/Tasks/Task.vue'
 
 const routes = [
   {
@@ -13,9 +15,15 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: '/my-tasks',
+    path: '/tasks',
     name: 'tasks',
     component: MyTasks,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/tasks/:id',
+    name: 'task',
+    component: Task,
     meta: { requiresAuth: true },
   },
   {
@@ -33,13 +41,9 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
 
-  // console.log('User:', user.value) // Now this should have the user data
-
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    console.log('Auth required, but no user found')
     next('/login') // Redirect to login if the user isn't authenticated
   } else if (to.name === 'auth' && authStore.isAuthenticated) {
-    console.log('User is authenticated, redirecting to dashboard')
     next('/') // Redirect to dashboard if already logged in and trying to access auth page
   } else {
     next() // Proceed with the route

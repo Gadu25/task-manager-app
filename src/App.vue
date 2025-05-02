@@ -2,10 +2,11 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { useAuthStore } from '@/stores/auth';
 import { watchEffect, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { Icon } from '@iconify/vue';
 import HoverButton from './components/buttons/HoverButton.vue';
 
+const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 
@@ -27,7 +28,8 @@ watchEffect(() => {
       <nav class="flex justify-between items-center gap-4 py-4 w-full">
         <div class="flex justify-start items-center gap-4 text-xl">
           <RouterLink to="/">Dashboard</RouterLink>
-          <RouterLink to="/my-tasks">My Tasks</RouterLink>
+          <RouterLink to="/tasks" :class="{ 'router-link-active': route.path.startsWith('/tasks') }">My Tasks
+          </RouterLink>
         </div>
         <HoverButton @click="authStore.signOutUser()" title="Logout" class="cursor-pointer group">
           <Icon icon="mynaui:logout" width="24" height="24" class="group-hover:text-white" />

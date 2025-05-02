@@ -1,9 +1,19 @@
 import { defineStore } from 'pinia'
 import { auth, db } from '@/firebase-config'
-import { collection, getDocs, addDoc, query, where, serverTimestamp } from 'firebase/firestore'
+import {
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  getDoc,
+  query,
+  where,
+  serverTimestamp,
+} from 'firebase/firestore'
 
 export const useTaskStore = defineStore('task', {
   state: () => ({
+    task: null,
     tasks: [],
     loading: false,
     error: null,
@@ -35,10 +45,24 @@ export const useTaskStore = defineStore('task', {
         this.loading = false
       }
     },
+    async fetchTask(id) {
+      try {
+        const docRef = doc(db, 'tasks', id)
+        const docSnap = await getDoc(docRef)
+
+        if (docSnap.exists()) {
+          this.task = { id: docSnap.id, ...docSnap.data() }
+        } else {
+          console.warn('No such task!')
+          this.task = null
+        }
+      } catch (err) {
+        console.error('Failed to fetch task:', err)
+      }
+    },
     async addTask(taskData) {
       this.error = null
       try {
-        console.log('Adding task:', taskData)
         const user = auth.currentUser
         if (!user) throw new Error('User not authenticated')
 
