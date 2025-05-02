@@ -1,12 +1,11 @@
 <script setup>
-import { ref } from 'vue';
 import FloatLarge from '../floats/FloatLarge.vue';
 import { Icon } from '@iconify/vue';
-import HoverButton  from '@/components/buttons/HoverButton.vue';
-import FloatTip from '@/components/floats/FloatTip.vue';
+import HoverButton from '@/components/buttons/HoverButton.vue';
 
 // form items
 import Input from '@/components/forms/items/Input.vue';
+import { ref } from 'vue';
 import TextArea from '@/components/forms/items/TextArea.vue';
 import Select from '@/components/forms/items/Select.vue';
 import DatePicker from '@/components/forms/items/DatePicker.vue';
@@ -23,21 +22,22 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
-const selectedTags = ref([]);
-const subTasks = ref([]);
-
 const priorityOptions = [
     { value: 'low', label: 'Low' },
     { value: 'medium', label: 'Medium' },
     { value: 'high', label: 'High' },
 ];
 
-const addTask = () => {
-    subTasks.value.push({ name: '', isDone: false });
-};
-const addTag = () => {
-    selectedTags.value.push({ name: '' });
-};
+const form = ref({
+    title: '',
+    description: '',
+    priority: 'low',
+    startDate: '',
+    dueDate: '',
+    subTasks: [],
+    tags: [],
+});
+
 const close = () => {
     emit('close');
 };
@@ -51,28 +51,22 @@ const close = () => {
         <template #form>
             <div class="flex flex-row gap-8 w-full mb-4">
                 <div class="flex flex-1 flex-col gap-2">
-                    <Input
-                        label="Title"
-                        placeholder="Enter task title"
-                    />
-                    <TextArea
-                        label="Description"
-                        placeholder="Enter task description"
-                    />
-                    
+                    <Input label="Title" placeholder="Enter task title" v-model="form.title" />
+                    <TextArea label="Description" placeholder="Enter task description" v-model="form.description" />
+
                     <div class="mt-10">
-                        <SubTasks />
+                        <SubTasks v-model="form.subTasks" />
                     </div>
                 </div>
                 <div class="flex flex-1 flex-col gap-2">
-                    <Select
-                        label="Priority"
-                        :options="priorityOptions"
-                    />
-                    <DatePicker label="Due Date" placeholder="Select due date"/>
+                    <Select label="Priority" :options="priorityOptions" v-model="form.priority" />
+                    <div class="flex gap-6">
+                        <DatePicker label="Start Date" placeholder="Select start date" v-model="form.startDate" />
+                        <DatePicker label="Due Date" placeholder="Select due date" v-model="form.dueDate" />
+                    </div>
 
                     <div class="mt-10">
-                        <Tags />
+                        <Tags v-model="form.tags" />
                     </div>
                 </div>
             </div>
@@ -85,6 +79,4 @@ const close = () => {
     </FloatLarge>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

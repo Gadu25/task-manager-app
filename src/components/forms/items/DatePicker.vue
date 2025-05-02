@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+const model = defineModel();
 
 const props = defineProps({
     label: {
@@ -13,8 +13,10 @@ const props = defineProps({
 });
 </script>
 <template>
-    <label for="task-due-date">{{label}}</label>
-    <input type="date" id="task-due-date" class="border p-2 rounded" :placeholder="placeholder" />
+    <div class="flex flex-col gap-2 mt-2">
+        <label for="task-due-date">{{ label }}</label>
+        <input type="date" id="task-due-date" class="border p-2 rounded" :placeholder="placeholder" v-model="model" />
+    </div>
 </template>
 <style scoped>
 #task-due-date {
