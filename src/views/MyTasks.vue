@@ -16,7 +16,6 @@ const toggleAddTask = () => {
 const tasks = ref([]);
 
 onMounted(() => {
-  console.log('MyTasks mounted');
   taskStore.fetchTasks()
 })
 

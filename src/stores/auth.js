@@ -31,10 +31,8 @@ export const useAuthStore = defineStore('auth', {
       return signInWithPopup(auth, provider)
         .then((result) => {
           this.user = result.user
-          console.log('User signed in:', this.user)
         })
         .catch((error) => {
-          console.error('Google Sign-In Error:', error)
           throw error
         })
     },
