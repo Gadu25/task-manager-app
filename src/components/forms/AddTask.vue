@@ -2,6 +2,7 @@
 import FloatLarge from '../floats/FloatLarge.vue';
 import { Icon } from '@iconify/vue';
 import HoverButton from '@/components/buttons/HoverButton.vue';
+import { useTaskStore } from '@/stores/task';
 
 // form items
 import Input from '@/components/forms/items/Input.vue';
@@ -13,6 +14,8 @@ import DatePicker from '@/components/forms/items/DatePicker.vue';
 import SubTasks from '@/components/forms/items/SubTasks.vue';
 import Tags from '@/components/forms/items/Tags.vue';
 
+const emit = defineEmits(['close']);
+
 const props = defineProps({
     isAddingTask: {
         type: Boolean,
@@ -20,7 +23,7 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(['close']);
+const taskStore = useTaskStore();
 
 const priorityOptions = [
     { value: 'low', label: 'Low' },
@@ -71,7 +74,8 @@ const close = () => {
                 </div>
             </div>
             <div class="flex justify-end">
-                <HoverButton class="text-white" style="background: #16a34a" @click="close" title="Save Task">
+                <HoverButton class="text-white" style="background: #16a34a" @click="taskStore.addTask(form)"
+                    title="Save Task">
                     <Icon icon="mynaui:save-solid" width="24" height="24" />
                 </HoverButton>
             </div>
