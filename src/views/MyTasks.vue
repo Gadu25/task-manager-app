@@ -34,6 +34,7 @@ watchEffect(() => {
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 my-4">
       <RegularTaskCard v-for="task in tasks" :task="task" />
     </div>
+    <AddTask :isAddingTask="isAddingTask" @close="toggleAddTask" />
   </div>
   <div v-else class="flex flex-wrap gap-6 items-center justify-center" style="height: calc(90vh - 112px)">
     <div class="w-auto h-auto mb-4 flex justify-center lg:block hidden">
@@ -48,8 +49,8 @@ watchEffect(() => {
         </HoverButton>
       </div>
     </div>
+    <AddTask :isAddingTask="isAddingTask" @close="toggleAddTask" />
   </div>
-  <AddTask :isAddingTask="isAddingTask" @close="toggleAddTask" />
 </template>
 
 <style></style>
