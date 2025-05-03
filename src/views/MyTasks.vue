@@ -1,10 +1,12 @@
 <script setup>
 import { onMounted, ref, watchEffect } from 'vue'
+import { Icon } from '@iconify/vue'
+import { useTaskStore } from '@/stores/task'
+
+import Loading from '@/components/loaders/Loading.vue'
 import HoverButton from '@/components/buttons/HoverButton.vue'
 import RegularTaskCard from '@/components/cards/RegularTaskCard.vue'
-import { Icon } from '@iconify/vue'
 import AddTask from '@/components/forms/AddTask.vue'
-import { useTaskStore } from '@/stores/task'
 
 const taskStore = useTaskStore();
 
@@ -25,7 +27,7 @@ watchEffect(() => {
 
 </script>
 <template>
-  <div v-if="tasks.length" class="tasks">
+  <div v-if="tasks.length && !taskStore.loading" class="tasks">
     <div class="flex justify-end">
       <HoverButton title="Add" @click="toggleAddTask">
         <Icon icon="mynaui:plus-solid" width="26" height="26" />
@@ -34,6 +36,10 @@ watchEffect(() => {
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 my-4">
       <RegularTaskCard v-for="task in tasks" :task="task" />
     </div>
+    <AddTask :isAddingTask="isAddingTask" @close="toggleAddTask" />
+  </div>
+  <div v-else-if="taskStore.loading" class="min-h-[400px] h-[calc(90vh-112px)]">
+      <Loading/>
   </div>
   <div v-else class="flex flex-wrap gap-6 items-center justify-center" style="height: calc(90vh - 112px)">
     <div class="w-auto h-auto mb-4 flex justify-center lg:block hidden">
@@ -48,8 +54,8 @@ watchEffect(() => {
         </HoverButton>
       </div>
     </div>
+    <AddTask :isAddingTask="isAddingTask" @close="toggleAddTask" />
   </div>
-  <AddTask :isAddingTask="isAddingTask" @close="toggleAddTask" />
 </template>
 
 <style></style>

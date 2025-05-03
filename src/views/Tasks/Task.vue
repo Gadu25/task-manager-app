@@ -3,6 +3,7 @@ import { onMounted, ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import { useTaskStore } from '@/stores/task';
 import FloatTip from '@/components/floats/FloatTip.vue';
+import Loading from '@/components/loaders/Loading.vue';
 
 const route = useRoute();
 const taskStore = useTaskStore();
@@ -73,4 +74,7 @@ watchEffect(() => {
             </div>
         </div>
     </div>
+    <div v-else="taskStore.loading" class="min-h-[400px] h-[calc(90vh-112px)]">
+      <Loading/>
+  </div>
 </template>

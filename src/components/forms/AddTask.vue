@@ -44,6 +44,20 @@ const form = ref({
 const close = () => {
     emit('close');
 };
+
+const saveTask = () => {
+    taskStore.addTask(form.value)
+    form.value = {
+        title: '',
+        description: '',
+        priority: 'low',
+        startDate: '',
+        dueDate: '',
+        subTasks: [],
+        tags: [],
+    };
+    close();
+};
 </script>
 
 <template>
@@ -74,8 +88,7 @@ const close = () => {
                 </div>
             </div>
             <div class="flex justify-end">
-                <HoverButton class="text-white" style="background: #16a34a" @click="taskStore.addTask(form)"
-                    title="Save Task">
+                <HoverButton class="text-white" style="background: #16a34a" @click="saveTask">
                     <Icon icon="mynaui:save-solid" width="24" height="24" />
                 </HoverButton>
             </div>
