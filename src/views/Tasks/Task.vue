@@ -35,7 +35,7 @@ watchEffect(() => {
         <div class="flex flex-col gap-2 rounded-xl p-6 bg-white">
             <div class="flex justify-between items-center">
                 <h2 class="text-2xl font-semibold">{{ task.title }}</h2>
-                <span class="font-semibold p-2 rounded flex items-center cursor-pointer"
+                <span class="font-semibold p-2 rounded flex items-center cursor-pointer active:scale-95"
                     :class="statusClasses[task.status]">{{
                         task.status
                     }}
