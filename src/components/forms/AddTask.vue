@@ -3,6 +3,8 @@ import FloatLarge from '../floats/FloatLarge.vue';
 import { Icon } from '@iconify/vue';
 import HoverButton from '@/components/buttons/HoverButton.vue';
 import { useTaskStore } from '@/stores/task';
+import { Form } from 'vee-validate';
+import * as yup from 'yup';
 
 // form items
 import Input from '@/components/forms/items/Input.vue';
@@ -23,6 +25,18 @@ const props = defineProps({
     },
 });
 
+const schema = yup.object({
+    title: yup.string().required('Title is required'),
+    // description: yup.string().required('Description is required'),
+    // priority: yup.string().required('Priority is required'),
+    // startDate: yup.date().required('Start date is required'),
+    // dueDate: yup.date().required('Due date is required'),
+})
+
+// const { handleSubmit } = useForm({
+//     validationSchema: schema,
+// })
+
 const taskStore = useTaskStore();
 
 const priorityOptions = [
@@ -31,32 +45,33 @@ const priorityOptions = [
     { value: 'high', label: 'High' },
 ];
 
-const form = ref({
-    title: '',
-    description: '',
-    priority: 'low',
-    startDate: '',
-    dueDate: '',
-    subTasks: [],
-    tags: [],
-});
+// const form = ref({
+//     title: values.title,
+//     description: '',
+//     priority: 'low',
+//     startDate: '',
+//     dueDate: '',
+//     subTasks: [],
+//     tags: [],
+// });
 
 const close = () => {
     emit('close');
 };
 
-const saveTask = () => {
-    taskStore.addTask(form.value)
-    form.value = {
-        title: '',
-        description: '',
-        priority: 'low',
-        startDate: '',
-        dueDate: '',
-        subTasks: [],
-        tags: [],
-    };
-    close();
+const saveTask = (values) => {
+    console.log('submitting shet', values)
+    // taskStore.addTask(form.value)
+    // form.value = {
+    //     title: '',
+    //     description: '',
+    //     priority: 'low',
+    //     startDate: '',
+    //     dueDate: '',
+    //     subTasks: [],
+    //     tags: [],
+    // };
+    // close();
 };
 </script>
 
@@ -66,32 +81,36 @@ const saveTask = () => {
             <h2 class="text-xl font-bold mb-4">Add Task</h2>
         </template>
         <template #form>
-            <div class="flex flex-row gap-8 w-full mb-4">
-                <div class="flex flex-1 flex-col gap-2">
-                    <Input label="Title" placeholder="Enter task title" v-model="form.title" />
-                    <TextArea label="Description" placeholder="Enter task description" v-model="form.description" />
+            <Form @submit="saveTask" :validation-schema="schema">
+                <div class="flex flex-row gap-8 w-full mb-4">
+                    <div class="flex flex-1 flex-col gap-2">
+                        <Input name="title" label="Title" placeholder="Enter task title" />
+                        <!-- <TextArea label="Description" placeholder="Enter task description" v-model="form.description" />
 
-                    <div class="mt-10">
-                        <SubTasks v-model="form.subTasks" />
+                        <div class="mt-10">
+                            <SubTasks v-model="form.subTasks" />
+                        </div> -->
+                    </div>
+                    <div class="flex flex-1 flex-col gap-2">
+                        <!-- <Select label="Priority" :options="priorityOptions" v-model="form.priority" />
+                        <div class="flex gap-6">
+                            <DatePicker label="Start Date" placeholder="Select start date" v-model="form.startDate" />
+                            <DatePicker label="Due Date" placeholder="Select due date" v-model="form.dueDate" />
+                        </div>
+
+                        <div class="mt-10">
+                            <Tags v-model="form.tags" />
+                        </div> -->
                     </div>
                 </div>
-                <div class="flex flex-1 flex-col gap-2">
-                    <Select label="Priority" :options="priorityOptions" v-model="form.priority" />
-                    <div class="flex gap-6">
-                        <DatePicker label="Start Date" placeholder="Select start date" v-model="form.startDate" />
-                        <DatePicker label="Due Date" placeholder="Select due date" v-model="form.dueDate" />
-                    </div>
-
-                    <div class="mt-10">
-                        <Tags v-model="form.tags" />
-                    </div>
+                <div class="flex justify-end">
+                    <button type="submit">
+                        <HoverButton class="text-white" style="background: #16a34a" title="save">
+                            <Icon icon="mynaui:save-solid" width="24" height="24" />
+                        </HoverButton>
+                    </button>
                 </div>
-            </div>
-            <div class="flex justify-end">
-                <HoverButton class="text-white" style="background: #16a34a" @click="saveTask">
-                    <Icon icon="mynaui:save-solid" width="24" height="24" />
-                </HoverButton>
-            </div>
+            </Form>
         </template>
     </FloatLarge>
 </template>
